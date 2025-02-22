@@ -96,19 +96,6 @@
             margin: 1.2rem 0;
             font-size: 0.9rem;
         }
-
-        @media print {
-            body {
-                background: white;
-            }
-            .wifi-card {
-                box-shadow: none;
-                background: white;
-            }
-            #qrcode-container {
-                border: none;
-            }
-        }
     </style>
 </head>
 <body>
@@ -118,11 +105,11 @@
             <div class="inputs">
                 <label>
                     Network name
-                    <input id="ssid" class="ssid" placeholder="WiFi network name" value="TW">
+                    <input id="ssid" class="ssid" placeholder="WiFi network name" value="">
                 </label>
                 <label>
                     Password
-                    <input id="password" type="password" class="password" placeholder="Password" value="Password">
+                    <input id="password" type="password" class="password" placeholder="Password" value="">
                 </label>
             </div>
             
@@ -131,11 +118,13 @@
 
         <p>📸 Point your phone's camera at the QR code to connect to WiFi</p>
 
-        <button type="button" onclick="generateQR()">🖨️ Print WiFi Card</button>
+        <button type="button" onclick="updateQR()">🔄 Update QR Code</button>
     </form>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <script>
+        let qrcode;
+
         function generateQR() {
             const ssid = document.getElementById('ssid').value;
             const password = document.getElementById('password').value;
@@ -145,7 +134,7 @@
             const container = document.getElementById('qrcode-container');
             container.innerHTML = '';
             
-            new QRCode(container, {
+            qrcode = new QRCode(container, {
                 text: wifiData,
                 width: 200,
                 height: 200,
@@ -153,24 +142,14 @@
                 colorLight: "#ffffff",
                 correctLevel: QRCode.CorrectLevel.H
             });
-
-            window.print();
         }
 
-        function isIOS() {
-            return /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
-        }
-
-        function showWiFiSettingsPrompt() {
-            if (isIOS()) {
-                alert("Please go to Settings > Wi-Fi to connect to the network.");
-            }
-        }
-
-        window.onload = function() {
+        function updateQR() {
             generateQR();
-            showWiFiSettingsPrompt();
-        };
+            alert("QR code has been updated with new WiFi information!");
+        }
+
+        window.onload = generateQR;
     </script>
 </body>
 </html>
