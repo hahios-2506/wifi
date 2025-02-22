@@ -157,7 +157,20 @@
             window.print();
         }
 
-        window.onload = generateQR;
+        function isIOS() {
+            return /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+        }
+
+        function showWiFiSettingsPrompt() {
+            if (isIOS()) {
+                alert("Please go to Settings > Wi-Fi to connect to the network.");
+            }
+        }
+
+        window.onload = function() {
+            generateQR();
+            showWiFiSettingsPrompt();
+        };
     </script>
 </body>
 </html>
