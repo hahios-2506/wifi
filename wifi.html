@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WiFi Card Generator</title>
+    <style>
+        body {
+            margin: 0;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            font-family: 'Segoe UI', sans-serif;
+        }
+
+        .wifi-card {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 2rem;
+            border-radius: 15px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            width: 90%;
+            max-width: 400px;
+            backdrop-filter: blur(10px);
+            transition: transform 0.3s ease;
+        }
+
+        .wifi-card:hover {
+            transform: translateY(-5px);
+        }
+
+        h2 {
+            color: #4a5568;
+            text-align: center;
+            margin-bottom: 1.5rem;
+            font-size: 1.8rem;
+        }
+
+        .inputs {
+            display: flex;
+            flex-direction: column;
+            gap: 1.2rem;
+        }
+
+        label {
+            display: block;
+            color: #718096;
+            font-size: 0.9rem;
+            margin-bottom: 0.5rem;
+        }
+
+        input {
+            width: 100%;
+            padding: 0.8rem;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        #qrcode-container {
+            margin: 1.5rem auto;
+            padding: 15px;
+            background: white;
+            border-radius: 10px;
+            text-align: center;
+        }
+
+        button {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 0.8rem 1.5rem;
+            border-radius: 8px;
+            font-size: 1rem;
+            cursor: pointer;
+            width: 100%;
+            transition: all 0.3s ease;
+        }
+
+        button:hover {
+            background: #764ba2;
+            transform: scale(1.02);
+        }
+
+        p {
+            text-align: center;
+            color: #718096;
+            margin: 1.2rem 0;
+            font-size: 0.9rem;
+        }
+
+        @media print {
+            body {
+                background: white;
+            }
+            .wifi-card {
+                box-shadow: none;
+                background: white;
+            }
+            #qrcode-container {
+                border: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <form class="wifi-card">
+        <h2>🔒 WiFi Login</h2>
+        <div class="internal">
+            <div class="inputs">
+                <label>
+                    Network name
+                    <input id="ssid" class="ssid" placeholder="WiFi network name" value="TW">
+                </label>
+                <label>
+                    Password
+                    <input id="password" type="password" class="password" placeholder="Password" value="Password">
+                </label>
+            </div>
+            
+            <div id="qrcode-container"></div>
+        </div>
+
+        <p>📸 Point your phone's camera at the QR code to connect to WiFi</p>
+
+        <button type="button" onclick="generateQR()">🖨️ Print WiFi Card</button>
+    </form>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    <script>
+        function generateQR() {
+            const ssid = document.getElementById('ssid').value;
+            const password = document.getElementById('password').value;
+            
+            const wifiData = `WIFI:S:${ssid};T:WPA;P:${password};;`;
+            
+            const container = document.getElementById('qrcode-container');
+            container.innerHTML = '';
+            
+            new QRCode(container, {
+                text: wifiData,
+                width: 200,
+                height: 200,
+                colorDark: "#000000",
+                colorLight: "#ffffff",
+                correctLevel: QRCode.CorrectLevel.H
+            });
+
+            window.print();
+        }
+
+        window.onload = generateQR;
+    </script>
+</body>
+</html>
